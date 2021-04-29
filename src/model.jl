@@ -25,11 +25,25 @@ end
 
 euler_dev(m :: Model, ctV) = UtilityFunctions890.euler_dev(m.u, ctV, betar(m));
 
-Lazy.@forward Model demog (
-    lifespan
+function consumption(m :: Model, t :: Integer, k, kPrime, efficiency = 0.0)
+    if isretired(m, t)
+        c = retired_consumption(m.budget, k, kPrime);
+    else
+        c = consumption(m.budget, k, kPrime, efficiency);
+    end
+    return c
+end
+
+# A little trick -- the same as writing
+# `lifespan(m :: Model) = lifespan(m.demog)` etc.
+Lazy.@forward Model.demog (
+    lifespan, workspan, isretired
 );
 
-# make_k_grid(m :: Model, t) = LinRange(0.0, m.kMax, m.nk);
+Lazy.@forward Model.kGrid (
+    make_k_grid
+);
+
 # kprime_max(m :: Model, t) = m.kMax;
 # # Max kPrime consistent with c > c_min
 # kprime_max(m :: Model, t, k) = budget_kprime(wage(m, t), m.R, k, c_min(m));

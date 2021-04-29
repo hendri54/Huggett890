@@ -7,4 +7,5 @@ using Test
     include("capital_grid_test.jl");
     include("budget_test.jl");
     include("model_test.jl");
+    include("solution_test.jl");
 end

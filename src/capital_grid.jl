@@ -9,4 +9,14 @@ function validate_capital_grid(kGrid :: CapitalGrid)
     return isValid
 end
 
+function validate_capital_grid(kGridV :: AbstractVector{T}) where T
+    isValid = all(diff(kGridV) .> 0.0);
+    return isValid
+end
+
+k_min(kGrid :: CapitalGrid, t) = kGrid.kMin;
+k_max(kGrid :: CapitalGrid, t) = kGrid.kMax;
+make_k_grid(kGrid :: CapitalGrid, t) = LinRange(k_min(kGrid, t), k_max(kGrid, t), kGrid.nk);
+
+
 # ------------

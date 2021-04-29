@@ -37,15 +37,24 @@ mutable struct Model
     discFactor :: Float64
 end
 
-# Solution for one period
+# Solution for one period while working
 # Stores policy functions
-# kPrime as a function of [k, efficiency].
-mutable struct PeriodSolution
+# kPrime as a function of [k, efficiency]. Hence a vector of functions `k -> k'`
+mutable struct WorkerSolution
+    kPrimeFctV 
+    cFctV
+end
+
+# Solution for one period while retired.
+# Function that maps `k -> k'` and `k -> c`
+mutable struct RetiredSolution
     kPrimeFct
+    cFct
 end
 
 mutable struct Solution
-    solV :: Vector{PeriodSolution}
+    workV :: Vector{WorkerSolution}
+    retireV :: Vector{RetiredSolution}
 end
 
 

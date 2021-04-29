@@ -14,5 +14,7 @@ end
 ## ---------  Helpers
 
 lifespan(d :: Demographics) = d.lifeSpan;
+workspan(d :: Demographics) = d.lastWorkAge;
+isretired(d :: Demographics, t :: Integer) = (t > workspan(d));
 
 # ------------

@@ -29,6 +29,8 @@ kprime(b :: Budget, k, c, efficiency) = income(b, k, efficiency) .- c;
 
 consumption(b :: Budget, k, kPrime, efficiency) = income(b, k, efficiency) .- kPrime;
 
-
+retired_income(b :: Budget, k) = b.retireTransfer .+ b.intRate .* k;
+retired_kprime(b :: Budget, k, c) = retired_income(b, k) .- c;
+retired_consumption(b :: Budget, k, kPrime) = retired_income(b, k) .- kPrime;
 
 # ---------------
