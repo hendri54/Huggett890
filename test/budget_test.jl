@@ -1,48 +1,58 @@
-function budget_test()
-    b = init_test_budget();
+function budget_test(retired :: Bool)
+    lastWorkAge = 30;
+    b = init_test_budget(lastWorkAge);
     @test validate_budget(b);
 
+    if retired
+        t = lastWorkAge + 1;
+        efficiency = 0.0;
+    else
+        t = lastWorkAge;
+        efficiency = [0.9, 2.1];
+    end
+
     k = [1.2, 2.4];
-    efficiency = [0.9, 2.1];
-    
-    y = income(b, k, efficiency);
+   
+    y = income(b, t, k; efficiency = efficiency);
     @test size(y) == size(k)
 
-    kp = kprime(b, k, 0.0, efficiency);
+    kp = kprime(b, t, k, 0.0; efficiency = efficiency);
     @test isapprox(y, kp)
     
     c = 0.6;
-    kp = kprime(b, k, c, efficiency);
+    kp = kprime(b, t, k, c; efficiency = efficiency);
     @test size(kp) == size(k)
 
-    c2 = consumption(b, k, kp, efficiency);
+    c2 = consumption(b, t, k, kp; efficiency = efficiency);
     @test size(c2) == size(k)
     @test all(isapprox.(c, c2))
 end
 
-function retired_test()
-    b = init_test_budget();
-    k = [1.2, 2.4];
+# function retired_test()
+#     b = init_test_budget();
+#     k = [1.2, 2.4];
     
-    y = retired_income(b, k);
-    @test size(y) == size(k)
+#     y = retired_income(b, k);
+#     @test size(y) == size(k)
 
-    kp = retired_kprime(b, k, 0.0);
-    @test isapprox(y, kp)
+#     kp = retired_kprime(b, k, 0.0);
+#     @test isapprox(y, kp)
     
-    c = 0.6;
-    kp = retired_kprime(b, k, c);
-    @test size(kp) == size(k)
+#     c = 0.6;
+#     kp = retired_kprime(b, k, c);
+#     @test size(kp) == size(k)
 
-    c2 = retired_consumption(b, k, kp);
-    @test size(c2) == size(k)
-    @test all(isapprox.(c, c2))
-end
+#     c2 = retired_consumption(b, k, kp);
+#     @test size(c2) == size(k)
+#     @test all(isapprox.(c, c2))
+# end
 
 
 @testset "Budget" begin
-    budget_test();
-    retired_test();
+    for retired in [true, false]
+        budget_test(retired);
+    end
+    # retired_test();
 end
 
 # -----------

@@ -5,7 +5,6 @@ mutable struct Demographics
 end
 
 mutable struct Endowments
-    ageEfficiencyV :: Vector{Float64}
     effGridV :: Vector{Float64}
     # Probability of each grid point at birth
     effProbV :: Vector{Float64}
@@ -20,6 +19,7 @@ mutable struct CapitalGrid
 end
 
 mutable struct Budget
+    ageEfficiencyV :: Vector{Float64}
     wage :: Float64
     intRate :: Float64
     taxRate :: Float64
@@ -52,6 +52,7 @@ mutable struct RetiredSolution
     cFct
 end
 
+# One solution for each t.
 mutable struct Solution
     workV :: Vector{WorkerSolution}
     retireV :: Vector{RetiredSolution}

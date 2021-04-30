@@ -1,5 +1,5 @@
 function model_test()
-    m = init_test_model();
+    m = init_model();
     @test validate_model(m);
 end
 

@@ -1,6 +1,6 @@
 # Demographics
 
-function init_test_demographics()
+function init_demographics()
     d = Demographics(60, 45, 1.0);
     @assert validate_demographics(d);
     return d

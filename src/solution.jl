@@ -8,8 +8,10 @@ function init_test_retired_solution()
     return RetiredSolution(kPrimeFct, cFct)
 end
 
-kprime(sol :: RetiredSolution, k) = sol.kPrimeFct(k);
-consumption(sol :: RetiredSolution, k) = sol.cFct(k);
+kprime_fct(sol :: RetiredSolution; eIdx = 0) = sol.kPrimeFct;
+cons_fct(sol :: RetiredSolution; eIdx = 0) = sol.cFct;
+kprime(sol :: RetiredSolution, k) = kprime_fct(sol)(k);
+consumption(sol :: RetiredSolution, k) = cons_fct(sol)(k);
 
 
 ## ------------  Worker
@@ -22,8 +24,11 @@ function init_test_worker_solution(n :: Integer = 4)
     return WorkerSolution(kPrimeFctV, cFctV)
 end
 
-kprime(sol :: WorkerSolution, k, eIdx) = sol.kPrimeFctV[eIdx](k);
-consumption(sol :: WorkerSolution, k, eIdx) = sol.cFctV[eIdx](k);
+# test this +++++
+kprime_fct(sol :: WorkerSolution; eIdx = 0) = sol.kPrimeFctV[eIdx];
+cons_fct(sol :: WorkerSolution; eIdx = 0) = sol.cFctV[eIdx];
+kprime(sol :: WorkerSolution, k; eIdx = 0) = kprime_fct(sol; eIdx = eIdx)(k);
+consumption(sol :: WorkerSolution, k; eIdx = 0) = cons_fct(sol; eIdx = eIdx)(k);
 
 
 ## ------------  Complete
@@ -46,10 +51,36 @@ end
 
 workspan(sol :: Solution) = length(sol.workV);
 isretired(sol :: Solution, t :: Integer) = (t > workspan(sol));
+retire_idx(sol :: Solution, t :: Integer) = t - workspan(sol);
 
+# test this +++++
+function get_solution(sol :: Solution, t :: Integer; eIdx = 0)
+    if isretired(sol, t)
+        @assert eIdx == 0
+        solOut = sol.retireV[retire_idx(sol, t)];
+    else
+        @assert eIdx > 0
+        solOut = sol.workV[t];
+    end
+    return solOut 
+end
+
+kprime(sol :: Solution, t :: Integer, k; eIdx = 0) =
+    kprime_fct(sol, t; eIdx = eIdx)(k);
+consumption(sol :: Solution, t :: Integer, k; eIdx = 0) =
+    cons_fct(sol, t; eIdx = eIdx)(k);
+
+# test this +++++
+kprime_fct(sol :: Solution, t :: Integer; eIdx = 0) = 
+    kprime_fct(get_solution(sol, t); eIdx = eIdx);
+cons_fct(sol :: Solution, t :: Integer; eIdx = 0) = 
+    cons_fct(get_solution(sol, t); eIdx = eIdx);
+
+# test this +++++
+# may have to take eIdx input
 function set_solution!(sol :: Solution, t :: Integer, kPrimeFct)
     if isretired(sol, t)
-        sol.retireV[t] = kPrimeFct;
+        sol.retireV[retire_idx(sol, t)] = kPrimeFct;
     else
         sol.workV[t] = kPrimeFct;
     end

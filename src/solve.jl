@@ -1,43 +1,18 @@
 function solve_model(m :: Model)
-    sol = Solution(workspan(m), lifespan(m));
-    solve_last_period!(m, sol);
-    for t = (lifespan(m) - 1) : -1 : 1
-        if isretired(m, t)
-            solve_retirement_period!(m, sol, t);
-        else
-            solve_work_period!(m, sol, t);
-        end
-    end
+    sol = init_solution(workspan(m), lifespan(m));
+    solve_retirement!(m, sol);
+    solve_work!(m, sol);
     return sol
 end
 
-function solve_last_period!(m :: Model, sol :: Solution)
-    set_solution!(sol, lifespan(m), solve_last_period(m));
+
+## ----------  Work 
+
+function solve_work!(m :: Model, sol :: Solution)
+    for t = workspan(m) : -1 : 1
+        solve_work_period!(m, sol, t);
+    end
 end
-
-# This is copied almost verbatim from our previous model (without shocks).
-# Returns functions `k' = G(k, T)` and `c = H(k, T)`.
-function solve_last_period(m :: Model)
-    T = lifespan(m);
-    kGridV = make_k_grid(m, T);
-    kPrimeFct = interpolate_kprime(kGridV, zeros(length(kGridV)));
-    cV = consumption(m, T, kGridV, 0.0);
-    cFct = interpolate_kprime(kGridV, cV);
-    return RetiredSolution(kPrimeFct, cFct)
-end
-
-
-function solve_retirement_period!(m :: Model, sol :: Solution, t :: Integer)
-    set_solution!(sol, t, solve_retirement_period())
-end
-
-# stub +++++
-function solve_retirement_period()
-    kPrimeFct = nothing;
-    cFct = nothing;
-    return RetiredSolution(kPrimeFct, cFct)
-end
-
 
 function solve_work_period!(m :: Model, sol :: Solution, t :: Integer)
     set_solution!(sol, t, solve_work_period())

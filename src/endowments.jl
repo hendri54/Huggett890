@@ -1,9 +1,6 @@
 # Endowments
 
 function init_test_endowments(lastWorkAge :: Int)
-    ageEfficiencyV = collect(LinRange(1.0, 3.0, lastWorkAge));
-    ageEfficiencyV[20 : lastWorkAge] .= 2.0;
-
     n = 3;
     effGridV = collect(LinRange(1.0, 3.0, n));
     effProbV = collect(LinRange(1.0, 0.5, n));
@@ -15,19 +12,13 @@ function init_test_endowments(lastWorkAge :: Int)
         trMatrix[:, j] .= prV ./ sum(prV);
     end
 
-    endow = Endowments(ageEfficiencyV, effGridV, effProbV, trMatrix);
+    endow = Endowments(effGridV, effProbV, trMatrix);
     return endow
 end
 
 function validate_endowments(e :: Endowments)
-    isValid = validate_age_efficiencies(e.ageEfficiencyV)  &&
-        validate_efficiency_grid(e.effGridV)  &&
+    isValid = validate_efficiency_grid(e.effGridV)  &&
         validate_transition_matrix(e.trMatrix);
-    return isValid
-end
-
-function validate_age_efficiencies(ageEfficiencyV :: Vector{Float64})
-    isValid = all(ageEfficiencyV .> 0.0);
     return isValid
 end
 

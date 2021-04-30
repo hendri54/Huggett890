@@ -1,5 +1,5 @@
 function demographics_test()
-    d = init_test_demographics();
+    d = init_demographics();
     @test validate_demographics(d)
 end
 
