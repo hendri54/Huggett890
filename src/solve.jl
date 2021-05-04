@@ -1,9 +1,3 @@
-function solve_model(m :: Model)
-    sol = init_solution(workspan(m), lifespan(m));
-    solve_retirement!(m, sol);
-    solve_work!(m, sol);
-    return sol
-end
 
 
 ## ----------  Work 
@@ -25,10 +19,10 @@ function solve_work_period()
     return WorkSolution(kPrimeFct, cFct)
 end
 
-function interpolate_kprime(kGridV :: AbstractVector{F}, kPrimeV :: AbstractVector{F}) where F
-    interp = LinearInterpolation(kGridV, kPrimeV);
-    return interp
-end
+# function interpolate_kprime(kGridV :: AbstractVector{F}, kPrimeV :: AbstractVector{F}) where F
+#     interp = LinearInterpolation(kGridV, kPrimeV);
+#     return interp
+# end
 
 
 # -----------------

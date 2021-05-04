@@ -4,7 +4,7 @@ function init_test_budget(lastWorkAge)
     wage = 2.0;
     intRate = 1.05;
     taxRate = 0.4;
-    retireTransfer = 0.9;
+    retireTransfer = 3.9;
     cMin = 1e-3;
     b = Budget(ageEfficiencyV, wage, intRate, taxRate, retireTransfer, cMin);
     @assert validate_budget(b);
@@ -34,8 +34,7 @@ isretired(b :: Budget, t :: Integer) = t > workspan(b);
 
 ## ---------  Work phase
 
-# test this +++++
-function earnings(b :: Budget, t :: Integer; efficiency = 0.0)
+function earnings(b :: Budget, t :: Integer, efficiency)
     if isretired(b, t)
         earn = 0.0;
     else
@@ -55,19 +54,20 @@ end
 
 capital_income(b :: Budget, k) = b.intRate .* k;
 
-income(b :: Budget, t :: Integer, k; efficiency = 0.0) = 
-    earnings(b, t; efficiency = efficiency) .+
+income(b :: Budget, t :: Integer, k, efficiency) = 
+    earnings(b, t, efficiency) .+
     retire_transfer(b, t) .+ 
     capital_income(b, k);
 
-kprime(b :: Budget, t :: Integer, k, c; efficiency = 0.0) = 
-    income(b, t, k; efficiency = efficiency) .- c;
+kprime(b :: Budget, t :: Integer, k, c, efficiency) = 
+    income(b, t, k, efficiency) .- c;
 
-consumption(b :: Budget, t :: Integer, k, kPrime; efficiency = 0.0) = 
-    income(b, t, k; efficiency = efficiency) .- kPrime;
+consumption(b :: Budget, t :: Integer, k, kPrime, efficiency) = 
+    income(b, t, k, efficiency) .- kPrime;
 
 # Max kPrime consistent with c > c_min
-kprime_max(b :: Budget, t :: Integer, k) = kprime(b, t, k, c_min(b));
+kprime_max(b :: Budget, t :: Integer, k, efficiency) = 
+    kprime(b, t, k, c_min(b), efficiency);
 
 # ## ----------  Retirement
 # # No efficiency state

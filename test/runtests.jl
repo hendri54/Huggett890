@@ -8,5 +8,5 @@ using Test
     include("budget_test.jl");
     include("model_test.jl");
     include("solution_test.jl");
-    include("solve_retirement_test.jl");
+    include("solve_worker_test.jl");
 end

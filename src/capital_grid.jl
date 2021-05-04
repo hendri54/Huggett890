@@ -1,5 +1,5 @@
 function init_test_capital_grid()
-    kGrid = CapitalGrid(-2.0, 9.5, 30);
+    kGrid = CapitalGrid(-2.0, 50.0, 300);
     @assert validate_capital_grid(kGrid);
     return kGrid
 end

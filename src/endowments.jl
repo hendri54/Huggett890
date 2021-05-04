@@ -37,4 +37,14 @@ function validate_transition_matrix(trMatrix :: Matrix{Float64})
     return isValid
 end
 
+
+## -----------  Access
+
+n_efficiencies(e :: Endowments) = length(e.effGridV);
+
+# Probability of e' | e
+prob_eprime(e :: Endowments, eIdx) = e.trMatrix[:, eIdx];
+
+efficiency(e :: Endowments, eIdx) = e.effGridV[eIdx];
+
 # -----------------

@@ -13,17 +13,17 @@ function budget_test(retired :: Bool)
 
     k = [1.2, 2.4];
    
-    y = income(b, t, k; efficiency = efficiency);
+    y = income(b, t, k, efficiency);
     @test size(y) == size(k)
 
-    kp = kprime(b, t, k, 0.0; efficiency = efficiency);
+    kp = kprime(b, t, k, 0.0, efficiency);
     @test isapprox(y, kp)
     
     c = 0.6;
-    kp = kprime(b, t, k, c; efficiency = efficiency);
+    kp = kprime(b, t, k, c, efficiency);
     @test size(kp) == size(k)
 
-    c2 = consumption(b, t, k, kp; efficiency = efficiency);
+    c2 = consumption(b, t, k, kp, efficiency);
     @test size(c2) == size(k)
     @test all(isapprox.(c, c2))
 end

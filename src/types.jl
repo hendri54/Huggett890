@@ -45,17 +45,10 @@ mutable struct WorkerSolution
     cFctV
 end
 
-# Solution for one period while retired.
-# Function that maps `k -> k'` and `k -> c`
-mutable struct RetiredSolution
-    kPrimeFct
-    cFct
-end
-
 # One solution for each t.
 mutable struct Solution
-    workV :: Vector{WorkerSolution}
-    retireV :: Vector{RetiredSolution}
+    workSpan :: Integer
+    solV :: Vector{WorkerSolution}
 end
 
 

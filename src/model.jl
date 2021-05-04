@@ -23,17 +23,17 @@ end
 
 ## ----------  Helpers
 
+n_efficiencies(m :: Model, t :: Integer) = 
+    isretired(m, t)  ?  1  :  n_efficiencies(m.endow);
 betar(m :: Model) = m.discFactor * m.budget.intRate;
 euler_dev(m :: Model, ctV) = UtilityFunctions890.euler_dev(m.util, ctV, betar(m));
 
-# function consumption(m :: Model, t :: Integer, k, kPrime, efficiency = 0.0)
-#     if isretired(m, t)
-#         c = consumption(m.budget, k, kPrime);
-#     else
-#         c = consumption(m.budget, k, kPrime, efficiency);
-#     end
-#     return c
-# end
+function kprime_range(m :: Model, t :: Integer, k, eff)
+    kPrimeMin = kprime_min(m.kGrid, t);
+    kPrimeMax = min(kprime_max(m.budget, t, k, eff), kprime_max(m.kGrid, t));
+    return kPrimeMin, kPrimeMax
+end
+
 
 # A little trick -- the same as writing
 # `lifespan(m :: Model) = lifespan(m.demog)` etc.
